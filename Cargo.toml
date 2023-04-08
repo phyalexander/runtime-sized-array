@@ -1,9 +1,10 @@
 [package]
-name = "runtime-sized-array"
+name    = "runtime-sized-array"
 version = "0.1.0"
 edition = "2021"
 authors = ["phyalex"]
-readme = "README.md"
+readme  = "README.md"
+license = "GFDL-1.3-or-later"
 description = "A variable-length array, also called runtime-sized"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
