@@ -16,7 +16,7 @@ use super::{Iter, IterMut, IntoIter};
 /// ```
 /// use runtime_sized_array::Array;
 /// let arr: Array<i32> = Array::new(10).unwrap();
-/// *arr[2] == 3;
+/// arr[2] == 3;
 /// ```
 ///
 pub struct Array<T> {
@@ -63,8 +63,8 @@ impl<T> Array<T> {
     ///
     /// ```
     /// use runtime_sized_array::Array;
-    /// let vec = vec![1,2,3];
-    /// let ptr = vec.as_ptr_mut();
+    /// let mut vec = vec![1,2,3];
+    /// let ptr = vec.as_mut_ptr();
     /// let size = vec.len();
     /// unsafe {
     ///     let arr: Array<i32> = Array::from_pointer(ptr, size);
@@ -238,7 +238,7 @@ impl<T> Array<T> {
     /// use runtime_sized_array::Array;
     ///
     /// let mut arr: Array<i32> = vec![1,2,4].into();
-    /// assert_eq!(try_set(1, 5), Some(()));
+    /// assert_eq!(arr.try_set(1, 5), Some(()));
     /// assert_eq!(arr.try_set(10, 4), None);
     /// ```
     #[inline]
@@ -313,7 +313,7 @@ impl<T> Array<T> {
     /// for elem in arr.iter_mut() {
     ///     *elem += 2;
     /// }
-    /// assert_eq!(arr[0], Some(&3));
+    /// assert_eq!(arr[0], 3);
     /// ```
     #[inline]
     pub fn iter_mut(&mut self) -> IterMut<T> {
@@ -348,7 +348,7 @@ impl<T> Array<T> {
     /// let ptr = arr.as_ptr();
     /// unsafe {
     ///     for i in 0..arr.size() {
-    ///         assert_eq!(arr[i], &*ptr.add(i));
+    ///         assert_eq!(arr[i], *ptr.add(i));
     ///     }
     /// }
     /// ```
@@ -428,7 +428,7 @@ impl<'a, T> IntoIterator for &'a mut Array<T> {
     /// for elem in &mut arr {
     ///     *elem += 2;
     /// }
-    /// assert_eq!(arr[0], Some(&3));
+    /// assert_eq!(arr[0], 3);
     /// ```
     #[inline]
     fn into_iter(self) -> Self::IntoIter {
@@ -482,7 +482,6 @@ impl<T> std::ops::IndexMut<usize> for Array<T> {
 impl<T> Drop for Array<T> {
 
     fn drop(&mut self) {
-        println!("array dropped");
         unsafe { self.pointer.drop_in_place() };
     }
 }
@@ -611,6 +610,19 @@ impl<T> Array<T> {
     /// if any of the following cases happened:
     /// * failed creating a [`layout`] with the following size,
     /// * failed allocating memory for the array.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use runtime_sized_array::Array;
+    /// let mut iter = vec![0,1,2,3,4,5].into_iter();
+    /// let arr : Array<i32> = Array::take_from_iter(&mut iter, 3);
+    ///
+    /// for i in 0..3 {
+    ///     assert_eq!(arr[i], i as i32)
+    /// }
+    /// ```
+    ///
     ///
     /// [allocating]: std::alloc
     /// [`layout`]: std::alloc::Layout

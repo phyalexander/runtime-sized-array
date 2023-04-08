@@ -23,8 +23,8 @@
 //!
 //! let arr1: Array<i32> = Array::new(10).expect("cant' create new array");
 //!
-//! let vec = vec![1,2,3];
-//! let ptr = vec.as_ptr_mut();
+//! let mut vec = vec![1,2,3];
+//! let ptr = vec.as_mut_ptr();
 //! let size = vec.len();
 //! let arr2: Array<i32> = unsafe { Array::from_pointer(ptr, size) };
 //!
@@ -78,12 +78,12 @@
 //! assert_eq!(arr.try_get_mut(10), None);
 //!
 //! // alternative mutable access
-//! assert_eq!(try_set(1, 5), Some(()));
+//! assert_eq!(arr.try_set(1, 5), Some(()));
 //! assert_eq!(arr.try_set(10, 4), None);
 //!
 //! // by brackets
-//! *arr[0] = 17;
-//! assert_eq!(arr[0], &17)
+//! arr[0] = 17;
+//! assert_eq!(arr[0], 17);
 //!
 //! ```
 //!
@@ -106,7 +106,7 @@
 //! // arr.set(10, 4); - undefined behaviour
 //!
 //! unsafe {
-//!     *arr.get_ptr_mut(0) = 10;
+//!     *arr.get_mut_ptr(0) = 10;
 //!     assert_eq!(*arr.get_ptr(0), 10)
 //! }
 //!

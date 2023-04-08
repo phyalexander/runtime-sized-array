@@ -156,7 +156,7 @@ mod into_iter {
     /// use runtime_sized_array::{Array, IntoIter};
     ///
     /// let mut array : Array<i32> = vec![1,2,3].into();
-    /// let iter: IntoIter<_>  = v.into_iter();
+    /// let iter: IntoIter<_>  = array.into_iter();
     /// ```
     pub struct IntoIter<T> {
         // do not let array be dropped before one's time
